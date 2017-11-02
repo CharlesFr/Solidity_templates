@@ -1,0 +1,19 @@
+{
+  "name": "frontend_application",
+  "version": "1.0.0",
+  "description": "A simple frontend application that interfaces with an Ethereum Decentralised Applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Solidity_Templates"
+  },
+  "author": "Charles Fried",
+  "license": "ISC",
+  "dependencies": {
+    "node-gyp": "^3.6.2",
+    "web3": "^0.20.2"
+  }
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src=".\node_modules\web3\dist\web3.min.js"></script>
+</head>
+<body>
+	<script>
+		var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		web3.eth.defaultAccounts = web3.eth.accounts[0];
+
+		var fooContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"getFoo","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_foo","type":"bytes32"}],"name":"setFoo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]);
+
+		var foo = fooContract.at('0x0762d0f8202a605f104eb52a20604b0de0d6f055');
+	</script>
+
+</body>
+</html>
