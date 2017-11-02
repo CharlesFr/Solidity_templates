@@ -1,20 +1,44 @@
 pragma solidity ^0.4.11;
 
 import './IERC20.sol';
+import './SafeMath.sol';
 
 contract MobCoin is IERC20 {
     
-    uint public constant _totalSuply = 1000000;
+    using SafeMath for uint256;
+    
+    uint public _totalSuply = 0;
     
     string public constant symbol = "MBC";
     string public constant name = "Mobcoin";
-    uint256 public constant decimals = 3;
+    uint256 public constant decimals = 18;
+    
+    // 1 ether = 500 MobCoin
+    uint256 public constant RATE = 500;
+    
+    // Person who receives ETH on ICO
+    address public owner;
     
     mapping(address => uint256) balances;
     mapping(address => mapping(address => uint256)) allowed;
     
+    function () payable {
+        createTokens();
+    }
+    
     function MobCoin(){
-        balances[msg.sender] = _totalSuply;
+        owner = msg.sender;
+        //balances[msg.sender] = _totalSuply;
+    }
+    
+    function createTokens() payable {
+        require(msg.value > 0);
+        
+        uint256 tokens = msg.value.mul(RATE);
+        balances[msg.sender] = balances[msg.sender].add(tokens);
+        _totalSuply = _totalSuply.add(tokens);
+        
+        owner.transfer(msg.value);
     }
     
     function totalSupply() constant returns (uint256 totalSupply){
@@ -31,11 +55,11 @@ contract MobCoin is IERC20 {
             && _value > 0
             );
             
-        balances[msg.sender] -= _value;
-        balances[_to] += _value;
-        `
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] =  balances[_to].add(_value);
+        
         Transfer(msg.sender, _to, _value);
-        return true
+        return true;
     }
     
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success){
@@ -45,9 +69,9 @@ contract MobCoin is IERC20 {
             && _value > 0
         );
         
-        balances[_from] += _value;
-        balances[_to] += _value;
-        allowed[_from][msg.sender] -= _value;
+        balances[_from] = balances[_from].sub(_value);
+        balances[_to] += balances[_to].add(_value);
+        allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
         Transfer(_from, _to, _value);
         return true;
     }
@@ -67,8 +91,3 @@ contract MobCoin is IERC20 {
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
     
 }
-
-
-
-
-
